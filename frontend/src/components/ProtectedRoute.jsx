@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { jwtDecode, JWTDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constraints";
 import { Navigate } from "react-router-dom";
+import api from "../api";
+
 function ProductRoute({ children }) {
   const [isAuthorized, SetIsAuthorize] = useState(null);
 
@@ -12,7 +14,10 @@ function ProductRoute({ children }) {
   const refreshtoken = async () => {
     const refreshtoken = localStorage.getItem(REFRESH_TOKEN);
     try {
-      const res = api.post("/api/token/refresh/", { refresh, refreshtoken });
+      const res = await api.post("/api/token/refresh/", {
+        refresh,
+        refreshtoken,
+      });
       if (res.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         SetIsAuthorize(true);
